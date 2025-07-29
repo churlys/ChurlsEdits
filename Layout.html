@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Process Scheduler Simulator</title>
+    <link rel="stylesheet" href="Designing.css">
+</head>
+<body>
+    <header>
+        <h1>Process Scheduler Simulator</h1>
+    </header>
+
+    <div class="grid-container">
+        <!-- Process Input Section -->
+        <div class="nvidia-card">
+            <h2>Process Input</h2>
+            
+            <div class="mb-4">
+                <label>Process ID</label>
+                <div class="flex space-x-2">
+                    <input type="text" id="processId" placeholder="Auto-assigned" class="nvidia-input" readonly>
+                    <button id="refreshPid" class="nvidia-btn" style="width: auto; padding: 0.5rem;" title="Get next available PID">
+                        <svg class="refresh-icon" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="text-xs mt-1 text-gray-300">Process IDs are automatically assigned sequentially</div>
+            </div>
+            
+            <div class="mb-4">
+                <label>Arrival Time</label>
+                <input type="number" id="arrivalTime" min="0" value="0" class="nvidia-input">
+            </div>
+            
+            <div class="mb-4">
+                <label>Burst Time</label>
+                <input type="number" id="burstTime" min="1" value="5" class="nvidia-input">
+            </div>
+            
+            <button id="addProcess" class="nvidia-btn">Add Process</button>
+            
+            <!-- Algorithm-specific settings -->
+            <div class="mb-4">
+                <h3>Algorithm Settings</h3>
+                
+                <!-- Round Robin settings -->
+                <div id="rr-settings" class="algorithm-settings">
+                    <label>Time Quantum</label>
+                    <input type="number" id="timeQuantum" min="1" value="2" class="nvidia-input">
+                </div>
+                
+                <!-- MLFQ settings -->
+                <div id="mlfq-settings" class="algorithm-settings">
+                    <label>Queue Time Quantums</label>
+                    <div class="queue-settings">
+                        <div class="queue-setting">
+                            <label>Queue 0:</label>
+                            <input type="number" id="mlfq-q0" min="0" value="2" class="nvidia-input">
+                        </div>
+                        <div class="queue-setting">
+                            <label>Queue 1:</label>
+                            <input type="number" id="mlfq-q1" min="0" value="4" class="nvidia-input">
+                        </div>
+                        <div class="queue-setting">
+                            <label>Queue 2:</label>
+                            <input type="number" id="mlfq-q2" min="0" value="8" class="nvidia-input">
+                        </div>
+                        <div class="queue-setting">
+                            <label>Queue 3:</label>
+                            <input type="number" id="mlfq-q3" min="0" value="16" class="nvidia-input">
+                        </div>
+                    </div>
+                    <p class="queue-note">Set a queue's time quantum to 0 to disable that queue level. At least one queue must have a non-zero time quantum.</p>
+                </div>
+            </div>
+            
+            <div class="mb-4">
+                <label>Generate Random Processes</label>
+                <div class="flex space-x-2">
+                    <input type="number" id="randomCount" min="1" max="20" value="5" class="nvidia-input" style="width: 50%;" placeholder="Count">
+                    <button id="generateRandom" class="nvidia-btn" style="width: 50%;">Generate</button>
+                </div>
+                <div class="text-xs mt-1 text-gray-300">Generates processes with random arrival and burst times</div>
+            </div>
+            
+            <button id="clearProcesses" class="nvidia-btn" style="background-color: #dc2626;">Clear All Processes</button>
+        </div>
+        
+        <!-- Scheduling Algorithms Section -->
+        <div class="nvidia-card">
+            <div class="tab-container">
+                <button class="nvidia-tab active" data-algorithm="fcfs">FIFO/FCFS</button>
+                <button class="nvidia-tab" data-algorithm="sjf">SJF (Non-Preemptive)</button>
+                <button class="nvidia-tab" data-algorithm="srtf">SRTF (Preemptive)</button>
+                <button class="nvidia-tab" data-algorithm="rr">Round Robin</button>
+                <button class="nvidia-tab" data-algorithm="mlfq">MLFQ</button>
+            </div>
+            
+            <div class="mb-4">
+                <div class="justify-between mb-2">
+                    <h3>Process Table</h3>
+                    <div class="tooltip">
+                        <span class="text-xs" style="background-color: var(--nvidia-green); padding: 0.25rem 0.5rem; border-radius: 0.25rem;">?</span>
+                        <span class="tooltiptext">Click on any cell to edit its value</span>
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="process-table">
+                        <thead>
+                            <tr>
+                                <th>Process ID</th>
+                                <th>Arrival Time</th>
+                                <th>Burst Time</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="processTableBody">
+                            <!-- Process rows will be added here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <button id="runSimulation" class="nvidia-btn">Run Simulation</button>
+            
+            <div class="mb-4">
+                <h3 class="mb-2">Gantt Chart</h3>
+                <div id="ganttChart" class="gantt-chart"></div>
+                <div class="text-xs mt-1 text-gray-400 text-center">Time units →</div>
+            </div>
+            
+            <div class="grid-2-cols">
+                <div class="nvidia-card">
+                    <h3 class="mb-2">Results</h3>
+                    <div class="results-container">
+                        <table class="results-table">
+                            <thead>
+                                <tr>
+                                    <th>PID</th>
+                                    <th>AT</th>
+                                    <th>BT</th>
+                                    <th>WT</th>
+                                    <th>TT</th>
+                                    <th>CT</th>
+                                </tr>
+                            </thead>
+                            <tbody id="resultsTableBody">
+                                <!-- Results will be added here -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="averageMetrics" class="mt-2">
+                        <p>Average Waiting Time: <span id="avgWaitingTime">0.00</span> ms</p>
+                        <p>Average Turnaround Time: <span id="avgTurnaroundTime">0.00</span> ms</p>
+                        <p>Average Response Time: <span id="avgResponseTime">0.00</span> ms</p>
+                    </div>
+                </div>
+                
+                <div class="nvidia-card">
+                    <h3 class="mb-2">Current Status</h3>
+                    <div id="currentStatus">
+                        <p>Current Time: <span id="currentTime">0</span> ms</p>
+                        <p>Running Process: <span id="runningProcess">None</span></p>
+                        <p>Queue: <span id="readyQueue">Empty</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="nvidia-card mt-6">
+        <h2>Algorithm Description</h2>
+        <div id="algorithmDescription" class="text-sm">
+            <h3>First-In First-Out (FIFO / FCFS)</h3>
+            <p>Processes are executed in the order they arrive in the ready queue. Simple but can lead to the "convoy effect" where short processes wait for long ones.</p>
+        </div>
+    </div>
+
+    <script src="Implementation.js"></script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9661739b63a6a99f',t:'MTc1MzY3NTAzOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

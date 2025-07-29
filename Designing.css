@@ -1,0 +1,407 @@
+:root {
+    --nvidia-green: #76b900;
+    --nvidia-dark: #1a1a1a;
+    --nvidia-gray: #333333;
+    --nvidia-light-gray: #666666;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--nvidia-dark);
+    color: white;
+    padding: 1rem;
+    min-height: 100vh;
+}
+
+header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+h1 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+h2 {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    color: var(--nvidia-green);
+}
+
+h3 {
+    font-size: 1.125rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+    .grid-container {
+        grid-template-columns: 1fr 2fr;
+    }
+}
+
+.nvidia-card {
+    background-color: var(--nvidia-gray);
+    border: 1px solid var(--nvidia-light-gray);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.nvidia-btn {
+    background-color: var(--nvidia-green);
+    color: white;
+    font-weight: bold;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.nvidia-btn:hover {
+    background-color: #8dd419;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(118, 185, 0, 0.3);
+}
+
+.nvidia-btn:active {
+    transform: translateY(0);
+}
+
+.nvidia-input {
+    background-color: var(--nvidia-dark);
+    border: 1px solid var(--nvidia-light-gray);
+    color: white;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    width: 100%;
+    margin-bottom: 0.5rem;
+}
+
+.nvidia-input:focus {
+    border-color: var(--nvidia-green);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(118, 185, 0, 0.2);
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.flex {
+    display: flex;
+}
+
+.flex-col {
+    flex-direction: column;
+}
+
+.space-x-2 > * + * {
+    margin-left: 0.5rem;
+}
+
+.mb-4 {
+    margin-bottom: 1rem;
+}
+
+.mb-2 {
+    margin-bottom: 0.5rem;
+}
+
+.mt-1 {
+    margin-top: 0.25rem;
+}
+
+.mt-2 {
+    margin-top: 0.5rem;
+}
+
+.mt-6 {
+    margin-top: 1.5rem;
+}
+
+.w-full {
+    width: 100%;
+}
+
+.w-1\/2 {
+    width: 50%;
+}
+
+.text-xs {
+    font-size: 0.75rem;
+}
+
+.text-sm {
+    font-size: 0.875rem;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-gray-300 {
+    color: #d1d5db;
+}
+
+.text-gray-400 {
+    color: #9ca3af;
+}
+
+.nvidia-tab {
+    background-color: var(--nvidia-gray);
+    color: #ccc;
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    margin-right: 0.25rem;
+    border: none;
+    cursor: pointer;
+}
+
+.nvidia-tab.active {
+    background-color: var(--nvidia-green);
+    color: white;
+}
+
+.tab-container {
+    display: flex;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--nvidia-light-gray);
+    overflow-x: auto;
+}
+
+.process-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.process-table th {
+    background-color: var(--nvidia-green);
+    color: white;
+    padding: 0.5rem;
+    text-align: left;
+}
+
+.process-table tr:nth-child(even) {
+    background-color: var(--nvidia-light-gray);
+}
+
+.process-table tr:nth-child(odd) {
+    background-color: var(--nvidia-gray);
+}
+
+.process-table td {
+    padding: 0.5rem;
+}
+
+.delete-btn {
+    background-color: #dc2626;
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    border: none;
+    cursor: pointer;
+    font-size: 0.875rem;
+}
+
+.delete-btn:hover {
+    background-color: #b91c1c;
+}
+
+.editable-cell {
+    padding: 2px;
+    min-width: 40px;
+}
+
+.editable-cell:focus {
+    background-color: var(--nvidia-dark);
+    outline: 2px solid var(--nvidia-green);
+}
+
+.gantt-chart {
+    height: 60px;
+    overflow-x: auto;
+    white-space: nowrap;
+    margin-top: 20px;
+    padding: 5px 0;
+    background-color: var(--nvidia-dark);
+    border-radius: 4px;
+}
+
+.gantt-block {
+    display: inline-block;
+    height: 100%;
+    text-align: center;
+    color: white;
+    font-weight: bold;
+    line-height: 30px;
+    border-radius: 4px;
+    margin: 0 3px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.7; }
+    100% { opacity: 1; }
+}
+
+.running {
+    animation: pulse 1s infinite;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 200px;
+    background-color: var(--nvidia-dark);
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -100px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    border: 1px solid var(--nvidia-green);
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+.results-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.results-table th {
+    background-color: var(--nvidia-green);
+    color: white;
+    padding: 8px;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.results-table td {
+    padding: 6px;
+    text-align: center;
+}
+
+.results-table tr:nth-child(even) {
+    background-color: var(--nvidia-light-gray);
+}
+
+.results-table tr:nth-child(odd) {
+    background-color: var(--nvidia-gray);
+}
+
+.results-container {
+    max-height: 200px;
+    overflow-y: auto;
+    margin-bottom: 10px;
+    border: 1px solid var(--nvidia-light-gray);
+    border-radius: 4px;
+}
+
+.algorithm-settings {
+    display: none;
+    margin-top: 10px;
+    padding: 10px;
+    background-color: var(--nvidia-gray);
+    border-radius: 4px;
+    border: 1px solid var(--nvidia-light-gray);
+}
+
+.algorithm-settings.active {
+    display: block;
+}
+
+.queue-settings {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.queue-setting {
+    display: flex;
+    align-items: center;
+}
+
+.queue-setting label {
+    width: 80px;
+    font-size: 0.9rem;
+    margin-right: 8px;
+}
+
+.queue-setting input {
+    flex: 1;
+}
+
+.queue-note {
+    font-size: 0.8rem;
+    color: #aaa;
+    margin-top: 8px;
+    font-style: italic;
+}
+
+.grid-2-cols {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+
+@media (min-width: 768px) {
+    .grid-2-cols {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.overflow-x-auto {
+    overflow-x: auto;
+}
+
+.justify-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.refresh-icon {
+    width: 20px;
+    height: 20px;
+}
