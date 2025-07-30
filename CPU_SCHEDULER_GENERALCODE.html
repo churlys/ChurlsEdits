@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Process Scheduler Simulator</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root {
             --nvidia-green: #76b900;
@@ -12,123 +11,305 @@
             --nvidia-gray: #333333;
             --nvidia-light-gray: #666666;
         }
-        
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--nvidia-dark);
             color: white;
+            padding: 1rem;
+            min-height: 100vh;
         }
-        
+
+        header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: var(--nvidia-green);
+        }
+
+        h3 {
+            font-size: 1.125rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (min-width: 1024px) {
+            .grid-container {
+                grid-template-columns: minmax(300px, 1fr) minmax(600px, 2fr);
+                grid-template-rows: auto;
+            }
+        }
+
+        .nvidia-card {
+            background-color: var(--nvidia-gray);
+            border: 1px solid var(--nvidia-light-gray);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
         .nvidia-btn {
             background-color: var(--nvidia-green);
             color: white;
             font-weight: bold;
+            padding: 0.5rem;
+            border-radius: 0.25rem;
+            border: none;
+            cursor: pointer;
             transition: all 0.3s ease;
+            width: 100%;
+            margin-bottom: 1rem;
         }
-        
+
         .nvidia-btn:hover {
             background-color: #8dd419;
             transform: translateY(-2px);
             box-shadow: 0 4px 6px rgba(118, 185, 0, 0.3);
         }
-        
+
         .nvidia-btn:active {
             transform: translateY(0);
         }
-        
-        .nvidia-card {
-            background-color: var(--nvidia-gray);
-            border: 1px solid var(--nvidia-light-gray);
-            border-radius: 8px;
-        }
-        
+
         .nvidia-input {
             background-color: var(--nvidia-dark);
             border: 1px solid var(--nvidia-light-gray);
             color: white;
+            padding: 0.5rem;
+            border-radius: 0.25rem;
+            width: 100%;
+            margin-bottom: 0.5rem;
         }
-        
+
         .nvidia-input:focus {
             border-color: var(--nvidia-green);
             outline: none;
             box-shadow: 0 0 0 2px rgba(118, 185, 0, 0.2);
         }
-        
-        .nvidia-tab {
-            background-color: var(--nvidia-gray);
-            color: #ccc;
-            border-top-left-radius: 8px;
-            border-top-right-radius: 8px;
-        }
-        
-        .nvidia-tab.active {
-            background-color: var(--nvidia-green);
-            color: white;
-        }
-        
-        .gantt-chart {
-            height: 60px; /* Increased height for better readability */
-            overflow-x: auto;
-            white-space: nowrap;
-            margin-top: 20px;
-            padding: 5px 0;
+
+        .nvidia-select {
             background-color: var(--nvidia-dark);
-            border-radius: 4px;
-        }
-        
-        .gantt-block {
-            display: inline-block;
-            height: 100%;
-            text-align: center;
+            border: 1px solid var(--nvidia-light-gray);
             color: white;
-            font-weight: bold;
-            line-height: 30px; /* Adjusted for the new height */
-            border-radius: 4px;
-            margin: 0 3px; /* Added margin for spacing between blocks */
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-            overflow: hidden;
+            padding: 0.5rem;
+            border-radius: 0.25rem;
+            width: 100%;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+            background-repeat: no-repeat;
+            background-position: right 0.5rem center;
         }
-        
+
+        .nvidia-select:focus {
+            border-color: var(--nvidia-green);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(118, 185, 0, 0.2);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .flex-col {
+            flex-direction: column;
+        }
+
+        .space-x-2 > * + * {
+            margin-left: 0.5rem;
+        }
+
+        .mb-4 {
+            margin-bottom: 1rem;
+        }
+
+        .mb-2 {
+            margin-bottom: 0.5rem;
+        }
+
+        .mt-1 {
+            margin-top: 0.25rem;
+        }
+
+        .mt-2 {
+            margin-top: 0.5rem;
+        }
+
+        .mt-6 {
+            margin-top: 1.5rem;
+        }
+
+        .w-full {
+            width: 100%;
+        }
+
+        .text-xs {
+            font-size: 0.75rem;
+        }
+
+        .text-sm {
+            font-size: 0.875rem;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-gray-300 {
+            color: #d1d5db;
+        }
+
+        .text-gray-400 {
+            color: #9ca3af;
+        }
+
+        .process-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
         .process-table th {
             background-color: var(--nvidia-green);
             color: white;
+            padding: 0.5rem;
+            text-align: left;
         }
-        
+
         .process-table tr:nth-child(even) {
             background-color: var(--nvidia-light-gray);
         }
-        
+
         .process-table tr:nth-child(odd) {
             background-color: var(--nvidia-gray);
         }
-        
+
+        .process-table td {
+            padding: 0.5rem;
+        }
+
+        .delete-btn {
+            background-color: #dc2626;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            border: none;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+
+        .delete-btn:hover {
+            background-color: #b91c1c;
+        }
+
         .editable-cell {
             padding: 2px;
             min-width: 40px;
         }
-        
+
         .editable-cell:focus {
             background-color: var(--nvidia-dark);
             outline: 2px solid var(--nvidia-green);
         }
-        
-        /* Animation for the running process */
+
+        .gantt-container {
+            position: relative;
+            width: 100%;
+            overflow-x: auto;
+            margin-top: 20px;
+            padding: 5px 0;
+            background-color: var(--nvidia-dark);
+            border-radius: 4px;
+            max-width: 100%;
+        }
+
+        .gantt-chart {
+            height: 80px; /* Increased height for better visibility */
+            min-width: 100%;
+            white-space: nowrap;
+            position: relative;
+            padding-top: 10px; /* Add padding at the top */
+        }
+
+        .gantt-block {
+            display: inline-block;
+            height: 60px; /* Fixed height for blocks */
+            text-align: center;
+            color: white;
+            font-weight: bold;
+            line-height: 30px;
+            border-radius: 4px;
+            margin: 0 3px; /* Increased margin between blocks */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.2); /* Add border for better visibility */
+        }
+
+        .time-marker {
+            position: absolute;
+            bottom: -20px;
+            transform: translateX(-50%);
+            font-size: 12px; /* Increased font size */
+            color: #ddd; /* Brighter color for better visibility */
+            font-weight: bold;
+        }
+
+        .time-marker-line {
+            position: absolute;
+            height: 80px; /* Match the gantt chart height */
+            width: 1px;
+            background-color: rgba(255, 255, 255, 0.2);
+            bottom: 20px;
+        }
+
         @keyframes pulse {
             0% { opacity: 1; }
             50% { opacity: 0.7; }
             100% { opacity: 1; }
         }
-        
+
         .running {
             animation: pulse 1s infinite;
         }
-        
-        /* Tooltip */
+
         .tooltip {
             position: relative;
             display: inline-block;
         }
-        
+
         .tooltip .tooltiptext {
             visibility: hidden;
             width: 200px;
@@ -146,18 +327,17 @@
             transition: opacity 0.3s;
             border: 1px solid var(--nvidia-green);
         }
-        
+
         .tooltip:hover .tooltiptext {
             visibility: visible;
             opacity: 1;
         }
-        
-        /* Results table */
+
         .results-table {
             width: 100%;
             border-collapse: collapse;
         }
-        
+
         .results-table th {
             background-color: var(--nvidia-green);
             color: white;
@@ -167,20 +347,20 @@
             top: 0;
             z-index: 10;
         }
-        
+
         .results-table td {
             padding: 6px;
             text-align: center;
         }
-        
+
         .results-table tr:nth-child(even) {
             background-color: var(--nvidia-light-gray);
         }
-        
+
         .results-table tr:nth-child(odd) {
             background-color: var(--nvidia-gray);
         }
-        
+
         .results-container {
             max-height: 200px;
             overflow-y: auto;
@@ -188,8 +368,7 @@
             border: 1px solid var(--nvidia-light-gray);
             border-radius: 4px;
         }
-        
-        /* Algorithm settings */
+
         .algorithm-settings {
             display: none;
             margin-top: 10px;
@@ -198,58 +377,173 @@
             border-radius: 4px;
             border: 1px solid var(--nvidia-light-gray);
         }
-        
+
         .algorithm-settings.active {
             display: block;
         }
-        
-        /* Vertical queue settings */
+
         .queue-settings {
             display: flex;
             flex-direction: column;
             gap: 8px;
             margin-top: 8px;
         }
-        
+
         .queue-setting {
             display: flex;
             align-items: center;
         }
-        
+
         .queue-setting label {
             width: 80px;
             font-size: 0.9rem;
             margin-right: 8px;
         }
-        
+
         .queue-setting input {
             flex: 1;
         }
-        
+
         .queue-note {
             font-size: 0.8rem;
             color: #aaa;
             margin-top: 8px;
             font-style: italic;
         }
+
+        .grid-2-cols {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        @media (min-width: 768px) {
+            .grid-2-cols {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .overflow-x-auto {
+            overflow-x: auto;
+        }
+
+        .justify-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .refresh-icon {
+            width: 20px;
+            height: 20px;
+        }
+        
+        /* New styles for improved Gantt chart */
+        .gantt-time-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+        
+        .gantt-time-label {
+            position: absolute;
+            bottom: -25px;
+            font-size: 12px;
+            color: #ddd;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .gantt-block-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            padding: 4px;
+        }
+        
+        .gantt-block-pid {
+            font-size: 14px;
+            font-weight: bold;
+        }
+        
+        .gantt-block-time {
+            font-size: 11px;
+            opacity: 0.9;
+        }
+        
+        .gantt-block-queue {
+            font-size: 10px;
+            opacity: 0.8;
+            margin-top: 2px;
+        }
+        
+        .gantt-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 30px;
+            padding: 5px;
+            justify-content: center;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-right: 10px;
+        }
+        
+        .legend-color {
+            width: 15px;
+            height: 15px;
+            border-radius: 3px;
+            margin-right: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        /* Algorithm selector styles */
+        .algorithm-selector {
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Fixed panel sizes */
+        .left-panel {
+            height: auto;
+            min-height: 600px;
+        }
+        
+        .right-panel {
+            height: auto;
+            min-height: 600px;
+        }
+        
+        /* Ensure gantt chart container doesn't affect layout */
+        .gantt-wrapper {
+            width: 100%;
+            overflow: hidden;
+        }
     </style>
 </head>
-<body class="min-h-screen p-4">
-    <header class="flex justify-center items-center mb-6">
-        <h1 class="text-2xl font-bold text-center">Process Scheduler Simulator</h1>
+<body>
+    <header>
+        <h1>Process Scheduler Simulator</h1>
     </header>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="grid-container">
         <!-- Process Input Section -->
-        <div class="nvidia-card p-4 lg:col-span-1">
-            <h2 class="text-xl font-bold mb-4 text-nvidia-green">Process Input</h2>
+        <div class="nvidia-card left-panel">
+            <h2>Process Input</h2>
             
             <div class="mb-4">
-                <label class="block mb-2">Process ID</label>
+                <label>Process ID</label>
                 <div class="flex space-x-2">
-                    <input type="text" id="processId" placeholder="Auto-assigned" class="nvidia-input w-full p-2 rounded" readonly>
-                    <button id="refreshPid" class="nvidia-btn px-3 py-2 rounded" title="Get next available PID">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <input type="text" id="processId" placeholder="Auto-assigned" class="nvidia-input" readonly>
+                    <button id="refreshPid" class="nvidia-btn" style="width: auto; padding: 0.5rem;" title="Get next available PID">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="refresh-icon">
                             <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd" />
                         </svg>
                     </button>
@@ -258,46 +552,53 @@
             </div>
             
             <div class="mb-4">
-                <label class="block mb-2">Arrival Time</label>
-                <input type="number" id="arrivalTime" min="0" value="0" class="nvidia-input w-full p-2 rounded">
+                <label>Arrival Time</label>
+                <input type="number" id="arrivalTime" min="0" value="0" class="nvidia-input">
             </div>
             
             <div class="mb-4">
-                <label class="block mb-2">Burst Time</label>
-                <input type="number" id="burstTime" min="1" value="5" class="nvidia-input w-full p-2 rounded">
+                <label>Burst Time</label>
+                <input type="number" id="burstTime" min="1" value="5" class="nvidia-input">
             </div>
             
-            <button id="addProcess" class="nvidia-btn w-full p-2 rounded mb-4">Add Process</button>
+            <button id="addProcess" class="nvidia-btn">Add Process</button>
             
-            <!-- Algorithm-specific settings -->
+            <!-- Algorithm selection and settings -->
             <div class="mb-4">
-                <h3 class="font-bold mb-2">Algorithm Settings</h3>
+                <h3>Algorithm Selection</h3>
+                <select id="algorithmSelect" class="nvidia-select">
+                    <option value="fcfs">First-In First-Out (FIFO/FCFS)</option>
+                    <option value="sjf">Shortest Job First (SJF - Non-Preemptive)</option>
+                    <option value="srtf">Shortest Remaining Time First (SRTF - Preemptive)</option>
+                    <option value="rr">Round Robin (RR)</option>
+                    <option value="mlfq">Multilevel Feedback Queue (MLFQ)</option>
+                </select>
                 
                 <!-- Round Robin settings -->
                 <div id="rr-settings" class="algorithm-settings">
-                    <label class="block mb-2">Time Quantum</label>
-                    <input type="number" id="timeQuantum" min="1" value="2" class="nvidia-input w-full p-2 rounded">
+                    <label>Time Quantum</label>
+                    <input type="number" id="timeQuantum" min="1" value="2" class="nvidia-input">
                 </div>
                 
                 <!-- MLFQ settings -->
                 <div id="mlfq-settings" class="algorithm-settings">
-                    <label class="block mb-2">Queue Time Quantums</label>
+                    <label>Queue Time Quantums</label>
                     <div class="queue-settings">
                         <div class="queue-setting">
                             <label>Queue 0:</label>
-                            <input type="number" id="mlfq-q0" min="0" value="2" class="nvidia-input p-2 rounded">
+                            <input type="number" id="mlfq-q0" min="0" value="2" class="nvidia-input">
                         </div>
                         <div class="queue-setting">
                             <label>Queue 1:</label>
-                            <input type="number" id="mlfq-q1" min="0" value="4" class="nvidia-input p-2 rounded">
+                            <input type="number" id="mlfq-q1" min="0" value="4" class="nvidia-input">
                         </div>
                         <div class="queue-setting">
                             <label>Queue 2:</label>
-                            <input type="number" id="mlfq-q2" min="0" value="8" class="nvidia-input p-2 rounded">
+                            <input type="number" id="mlfq-q2" min="0" value="8" class="nvidia-input">
                         </div>
                         <div class="queue-setting">
                             <label>Queue 3:</label>
-                            <input type="number" id="mlfq-q3" min="0" value="16" class="nvidia-input p-2 rounded">
+                            <input type="number" id="mlfq-q3" min="0" value="16" class="nvidia-input">
                         </div>
                     </div>
                     <p class="queue-note">Set a queue's time quantum to 0 to disable that queue level. At least one queue must have a non-zero time quantum.</p>
@@ -305,43 +606,35 @@
             </div>
             
             <div class="mb-4">
-                <label class="block mb-2">Generate Random Processes</label>
+                <label>Generate Random Processes</label>
                 <div class="flex space-x-2">
-                    <input type="number" id="randomCount" min="1" max="20" value="5" class="nvidia-input w-1/2 p-2 rounded" placeholder="Count">
-                    <button id="generateRandom" class="nvidia-btn w-1/2 p-2 rounded">Generate</button>
+                    <input type="number" id="randomCount" min="1" max="20" value="5" class="nvidia-input" style="width: 50%;" placeholder="Count">
+                    <button id="generateRandom" class="nvidia-btn" style="width: 50%;">Generate</button>
                 </div>
                 <div class="text-xs mt-1 text-gray-300">Generates processes with random arrival and burst times</div>
             </div>
             
-            <button id="clearProcesses" class="bg-red-600 hover:bg-red-700 text-white font-bold w-full p-2 rounded">Clear All Processes</button>
+            <button id="clearProcesses" class="nvidia-btn" style="background-color: #dc2626;">Clear All Processes</button>
         </div>
         
         <!-- Scheduling Algorithms Section -->
-        <div class="nvidia-card p-4 lg:col-span-2">
-            <div class="flex mb-4 border-b border-nvidia-light-gray overflow-x-auto">
-                <button class="nvidia-tab active px-4 py-2 mr-1" data-algorithm="fcfs">FIFO/FCFS</button>
-                <button class="nvidia-tab px-4 py-2 mr-1" data-algorithm="sjf">SJF (Non-Preemptive)</button>
-                <button class="nvidia-tab px-4 py-2 mr-1" data-algorithm="srtf">SRTF (Preemptive)</button>
-                <button class="nvidia-tab px-4 py-2 mr-1" data-algorithm="rr">Round Robin</button>
-                <button class="nvidia-tab px-4 py-2" data-algorithm="mlfq">MLFQ</button>
-            </div>
-            
+        <div class="nvidia-card right-panel">
             <div class="mb-4">
-                <div class="flex justify-between items-center mb-2">
-                    <h3 class="text-lg font-bold">Process Table</h3>
+                <div class="justify-between mb-2">
+                    <h3>Process Table</h3>
                     <div class="tooltip">
-                        <span class="text-xs bg-nvidia-green px-2 py-1 rounded">?</span>
+                        <span class="text-xs" style="background-color: var(--nvidia-green); padding: 0.25rem 0.5rem; border-radius: 0.25rem;">?</span>
                         <span class="tooltiptext">Click on any cell to edit its value</span>
                     </div>
                 </div>
                 <div class="overflow-x-auto">
-                    <table class="process-table w-full border-collapse">
+                    <table class="process-table">
                         <thead>
                             <tr>
-                                <th class="p-2">Process ID</th>
-                                <th class="p-2">Arrival Time</th>
-                                <th class="p-2">Burst Time</th>
-                                <th class="p-2">Actions</th>
+                                <th>Process ID</th>
+                                <th>Arrival Time</th>
+                                <th>Burst Time</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody id="processTableBody">
@@ -351,17 +644,24 @@
                 </div>
             </div>
             
-            <button id="runSimulation" class="nvidia-btn w-full p-2 rounded mb-4">Run Simulation</button>
+            <button id="runSimulation" class="nvidia-btn">Run Simulation</button>
             
             <div class="mb-4">
-                <h3 class="text-lg font-bold mb-2">Gantt Chart</h3>
-                <div id="ganttChart" class="gantt-chart rounded overflow-x-auto"></div>
+                <h3 class="mb-2">Gantt Chart</h3>
+                <div class="gantt-wrapper">
+                    <div class="gantt-container">
+                        <div id="ganttChart" class="gantt-chart"></div>
+                    </div>
+                </div>
                 <div class="text-xs mt-1 text-gray-400 text-center">Time units →</div>
+                <div id="ganttLegend" class="gantt-legend">
+                    <!-- Legend items will be added here -->
+                </div>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="nvidia-card p-4">
-                    <h3 class="text-lg font-bold mb-2">Results</h3>
+            <div class="grid-2-cols">
+                <div class="nvidia-card">
+                    <h3 class="mb-2">Results</h3>
                     <div class="results-container">
                         <table class="results-table">
                             <thead>
@@ -386,8 +686,8 @@
                     </div>
                 </div>
                 
-                <div class="nvidia-card p-4">
-                    <h3 class="text-lg font-bold mb-2">Current Status</h3>
+                <div class="nvidia-card">
+                    <h3 class="mb-2">Current Status</h3>
                     <div id="currentStatus">
                         <p>Current Time: <span id="currentTime">0</span> ms</p>
                         <p>Running Process: <span id="runningProcess">None</span></p>
@@ -398,10 +698,10 @@
         </div>
     </div>
     
-    <div class="nvidia-card p-4 mt-6">
-        <h2 class="text-xl font-bold mb-4 text-nvidia-green">Algorithm Description</h2>
+    <div class="nvidia-card mt-6">
+        <h2>Algorithm Description</h2>
         <div id="algorithmDescription" class="text-sm">
-            <h3 class="font-bold">First-In First-Out (FIFO / FCFS)</h3>
+            <h3>First-In First-Out (FIFO / FCFS)</h3>
             <p>Processes are executed in the order they arrive in the ready queue. Simple but can lead to the "convoy effect" where short processes wait for long ones.</p>
         </div>
     </div>
@@ -445,7 +745,7 @@
                 return copy;
             }
         }
-        
+
         // Scheduler class
         class Scheduler {
             constructor() {
@@ -537,18 +837,17 @@
                 sortedProcesses.forEach(process => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                        <td class="p-2">
+                        <td>
                             <div class="editable-cell" contenteditable="false" data-id="${process.id}" data-field="id">${process.id}</div>
                         </td>
-                        <td class="p-2">
+                        <td>
                             <div class="editable-cell" contenteditable="true" data-id="${process.id}" data-field="arrivalTime">${process.arrivalTime}</div>
                         </td>
-                        <td class="p-2">
+                        <td>
                             <div class="editable-cell" contenteditable="true" data-id="${process.id}" data-field="burstTime">${process.burstTime}</div>
                         </td>
-                        <td class="p-2">
-                            <button class="bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded text-sm delete-btn" 
-                                    data-id="${process.id}">Delete</button>
+                        <td>
+                            <button class="delete-btn" data-id="${process.id}">Delete</button>
                         </td>
                     `;
                     tableBody.appendChild(row);
@@ -651,25 +950,25 @@
                 switch(this.currentAlgorithm) {
                     case 'fcfs':
                         descriptionDiv.innerHTML = `
-                            <h3 class="font-bold">First-In First-Out (FIFO / FCFS)</h3>
+                            <h3>First-In First-Out (FIFO / FCFS)</h3>
                             <p>Processes are executed in the order they arrive in the ready queue. Simple but can lead to the "convoy effect" where short processes wait for long ones.</p>
                         `;
                         break;
                     case 'sjf':
                         descriptionDiv.innerHTML = `
-                            <h3 class="font-bold">Shortest Job First (SJF) - Non-Preemptive</h3>
+                            <h3>Shortest Job First (SJF) - Non-Preemptive</h3>
                             <p>Selects the process with the smallest burst time from the ready queue. Once a process starts executing, it runs to completion.</p>
                         `;
                         break;
                     case 'srtf':
                         descriptionDiv.innerHTML = `
-                            <h3 class="font-bold">Shortest Remaining Time First (SRTF) - Preemptive</h3>
+                            <h3>Shortest Remaining Time First (SRTF) - Preemptive</h3>
                             <p>Preemptive version of SJF. If a new process arrives with a burst time less than the remaining time of the current process, the current process is preempted.</p>
                         `;
                         break;
                     case 'rr':
                         descriptionDiv.innerHTML = `
-                            <h3 class="font-bold">Round Robin (RR)</h3>
+                            <h3>Round Robin (RR)</h3>
                             <p>Each process is assigned a fixed time slice (time quantum). After this time has elapsed, the process is preempted and added to the end of the ready queue.</p>
                         `;
                         break;
@@ -681,21 +980,21 @@
                         
                         let queueDescription = '';
                         if (activeQueues.length > 0) {
-                            queueDescription = '<ul class="list-disc pl-5 mt-1">';
+                            queueDescription = '<ul style="list-style-type: disc; padding-left: 1.25rem; margin-top: 0.25rem;">';
                             activeQueues.forEach(q => {
                                 queueDescription += `<li>Queue ${q.index}: ${q.index === 0 ? 'Highest' : q.index === activeQueues.length - 1 ? 'Lowest' : 'Medium'} priority, Time Quantum = ${q.quantum}</li>`;
                             });
                             queueDescription += '</ul>';
                         } else {
-                            queueDescription = '<p class="mt-2 text-red-500">Warning: No active queues defined! Please set at least one queue with a non-zero time quantum.</p>';
+                            queueDescription = '<p style="margin-top: 0.5rem; color: #ef4444;">Warning: No active queues defined! Please set at least one queue with a non-zero time quantum.</p>';
                         }
                         
                         descriptionDiv.innerHTML = `
-                            <h3 class="font-bold">Multilevel Feedback Queue (MLFQ)</h3>
+                            <h3>Multilevel Feedback Queue (MLFQ)</h3>
                             <p>Uses multiple levels of queues with different priorities. Processes move between queues based on their behavior and CPU bursts. Combines benefits of RR and priority scheduling.</p>
-                            <p class="mt-2">In this implementation:</p>
+                            <p style="margin-top: 0.5rem;">In this implementation:</p>
                             ${queueDescription}
-                            <p class="mt-2">Processes start in the highest priority queue and move to lower priority queues if they use their full time quantum.</p>
+                            <p style="margin-top: 0.5rem;">Processes start in the highest priority queue and move to lower priority queues if they use their full time quantum.</p>
                         `;
                         break;
                 }
@@ -734,6 +1033,7 @@
                 
                 // Clear UI
                 document.getElementById('ganttChart').innerHTML = '';
+                document.getElementById('ganttLegend').innerHTML = '';
                 document.getElementById('resultsTableBody').innerHTML = '';
                 document.getElementById('avgWaitingTime').textContent = '0.00';
                 document.getElementById('avgTurnaroundTime').textContent = '0.00';
@@ -795,6 +1095,17 @@
                 const readyQueue = [];
                 this.completedProcesses = [];
                 
+                // Handle idle time at the beginning if no process arrives at time 0
+                if (processes.length > 0 && processes[0].arrivalTime > 0) {
+                    this.ganttChart.push({
+                        processId: "Idle",
+                        startTime: 0,
+                        endTime: processes[0].arrivalTime,
+                        color: "#555555"
+                    });
+                    currentTime = processes[0].arrivalTime;
+                }
+                
                 while (processes.length > 0 || readyQueue.length > 0) {
                     // Add processes that have arrived to the ready queue
                     while (processes.length > 0 && processes[0].arrivalTime <= currentTime) {
@@ -803,7 +1114,18 @@
                     
                     if (readyQueue.length === 0) {
                         // No process in ready queue, advance time to next arrival
-                        currentTime = processes[0].arrivalTime;
+                        if (processes.length > 0) {
+                            // Add idle time to Gantt chart
+                            this.ganttChart.push({
+                                processId: "Idle",
+                                startTime: currentTime,
+                                endTime: processes[0].arrivalTime,
+                                color: "#555555"
+                            });
+                            currentTime = processes[0].arrivalTime;
+                        } else {
+                            break;
+                        }
                         continue;
                     }
                     
@@ -843,6 +1165,17 @@
                 const readyQueue = [];
                 this.completedProcesses = [];
                 
+                // Handle idle time at the beginning if no process arrives at time 0
+                if (processes.length > 0 && processes[0].arrivalTime > 0) {
+                    this.ganttChart.push({
+                        processId: "Idle",
+                        startTime: 0,
+                        endTime: processes[0].arrivalTime,
+                        color: "#555555"
+                    });
+                    currentTime = processes[0].arrivalTime;
+                }
+                
                 while (processes.length > 0 || readyQueue.length > 0) {
                     // Add processes that have arrived to the ready queue
                     while (processes.length > 0 && processes[0].arrivalTime <= currentTime) {
@@ -851,7 +1184,18 @@
                     
                     if (readyQueue.length === 0) {
                         // No process in ready queue, advance time to next arrival
-                        currentTime = processes[0].arrivalTime;
+                        if (processes.length > 0) {
+                            // Add idle time to Gantt chart
+                            this.ganttChart.push({
+                                processId: "Idle",
+                                startTime: currentTime,
+                                endTime: processes[0].arrivalTime,
+                                color: "#555555"
+                            });
+                            currentTime = processes[0].arrivalTime;
+                        } else {
+                            break;
+                        }
                         continue;
                     }
                     
@@ -895,6 +1239,17 @@
                 this.completedProcesses = [];
                 let currentProcess = null;
                 
+                // Handle idle time at the beginning if no process arrives at time 0
+                if (processes.length > 0 && processes[0].arrivalTime > 0) {
+                    this.ganttChart.push({
+                        processId: "Idle",
+                        startTime: 0,
+                        endTime: processes[0].arrivalTime,
+                        color: "#555555"
+                    });
+                    currentTime = processes[0].arrivalTime;
+                }
+                
                 while (processes.length > 0 || readyQueue.length > 0 || currentProcess) {
                     // Add processes that have arrived to the ready queue
                     while (processes.length > 0 && processes[0].arrivalTime <= currentTime) {
@@ -915,6 +1270,13 @@
                         if (readyQueue.length === 0) {
                             // No process in ready queue, advance time to next arrival
                             if (processes.length > 0) {
+                                // Add idle time to Gantt chart
+                                this.ganttChart.push({
+                                    processId: "Idle",
+                                    startTime: currentTime,
+                                    endTime: processes[0].arrivalTime,
+                                    color: "#555555"
+                                });
                                 currentTime = processes[0].arrivalTime;
                             } else {
                                 break;
@@ -975,6 +1337,17 @@
                 const readyQueue = [];
                 this.completedProcesses = [];
                 
+                // Handle idle time at the beginning if no process arrives at time 0
+                if (processes.length > 0 && processes[0].arrivalTime > 0) {
+                    this.ganttChart.push({
+                        processId: "Idle",
+                        startTime: 0,
+                        endTime: processes[0].arrivalTime,
+                        color: "#555555"
+                    });
+                    currentTime = processes[0].arrivalTime;
+                }
+                
                 while (processes.length > 0 || readyQueue.length > 0) {
                     // Add processes that have arrived to the ready queue
                     while (processes.length > 0 && processes[0].arrivalTime <= currentTime) {
@@ -983,7 +1356,18 @@
                     
                     if (readyQueue.length === 0) {
                         // No process in ready queue, advance time to next arrival
-                        currentTime = processes[0].arrivalTime;
+                        if (processes.length > 0) {
+                            // Add idle time to Gantt chart
+                            this.ganttChart.push({
+                                processId: "Idle",
+                                startTime: currentTime,
+                                endTime: processes[0].arrivalTime,
+                                color: "#555555"
+                            });
+                            currentTime = processes[0].arrivalTime;
+                        } else {
+                            break;
+                        }
                         continue;
                     }
                     
@@ -1045,6 +1429,17 @@
                 
                 this.completedProcesses = [];
                 
+                // Handle idle time at the beginning if no process arrives at time 0
+                if (processes.length > 0 && processes[0].arrivalTime > 0) {
+                    this.ganttChart.push({
+                        processId: "Idle",
+                        startTime: 0,
+                        endTime: processes[0].arrivalTime,
+                        color: "#555555"
+                    });
+                    currentTime = processes[0].arrivalTime;
+                }
+                
                 this.log("Starting MLFQ simulation with " + queues.length + " active queues");
                 
                 while (processes.length > 0 || queues.some(q => q.processes.length > 0)) {
@@ -1065,6 +1460,13 @@
                     if (queueIndex === queues.length) {
                         // All queues are empty, advance time to next arrival
                         if (processes.length > 0) {
+                            // Add idle time to Gantt chart
+                            this.ganttChart.push({
+                                processId: "Idle",
+                                startTime: currentTime,
+                                endTime: processes[0].arrivalTime,
+                                color: "#555555"
+                            });
                             currentTime = processes[0].arrivalTime;
                             this.log(`Time ${currentTime}: All queues empty, advancing to next arrival time`);
                         } else {
@@ -1137,7 +1539,9 @@
                 
                 // Verify all processes completed
                 const totalBurstTime = this.completedProcesses.reduce((sum, p) => sum + p.burstTime, 0);
-                const totalExecutedTime = this.ganttChart.reduce((sum, block) => sum + (block.endTime - block.startTime), 0);
+                const totalExecutedTime = this.ganttChart
+                    .filter(block => block.processId !== "Idle")
+                    .reduce((sum, block) => sum + (block.endTime - block.startTime), 0);
                 
                 this.log(`MLFQ Simulation completed. Total burst time: ${totalBurstTime}, Total executed time: ${totalExecutedTime}`);
                 if (totalBurstTime !== totalExecutedTime) {
@@ -1158,41 +1562,107 @@
             
             updateGanttChart() {
                 const ganttChartDiv = document.getElementById('ganttChart');
+                const legendDiv = document.getElementById('ganttLegend');
                 ganttChartDiv.innerHTML = '';
+                legendDiv.innerHTML = '';
                 
                 if (this.ganttChart.length === 0) return;
                 
-                // Calculate total width
+                // Calculate total width and time
                 const totalTime = this.ganttChart[this.ganttChart.length - 1].endTime;
-                const minBlockWidth = 50; // Minimum width for a block in pixels
+                const pixelsPerTimeUnit = 50; // Fixed width per time unit for better visibility
                 
+                // Set the width of the gantt chart container based on the total time
+                // This won't affect the layout because it's inside a scrollable container
+                ganttChartDiv.style.width = `${Math.max(totalTime * pixelsPerTimeUnit + 50, 800)}px`;
+                
+                // Create time markers and grid lines first (0 to totalTime)
+                for (let t = 0; t <= totalTime; t++) {
+                    // Create time marker
+                    const marker = document.createElement('div');
+                    marker.className = 'time-marker';
+                    marker.style.left = `${t * pixelsPerTimeUnit}px`;
+                    marker.textContent = t;
+                    
+                    // Create vertical grid line
+                    const line = document.createElement('div');
+                    line.className = 'time-marker-line';
+                    line.style.left = `${t * pixelsPerTimeUnit}px`;
+                    
+                    ganttChartDiv.appendChild(marker);
+                    ganttChartDiv.appendChild(line);
+                }
+                
+                // Track processes for the legend
+                const processColors = new Map();
+                
+                // Now add the gantt blocks with proper spacing
                 this.ganttChart.forEach(block => {
                     const duration = block.endTime - block.startTime;
-                    const width = Math.max(minBlockWidth, (duration / totalTime) * 1000);
+                    const width = duration * pixelsPerTimeUnit - 6; // Subtract margin for spacing
+                    const left = block.startTime * pixelsPerTimeUnit + 3; // Add margin for spacing
                     
                     const ganttBlock = document.createElement('div');
                     ganttBlock.className = 'gantt-block';
                     ganttBlock.style.width = `${width}px`;
                     ganttBlock.style.backgroundColor = block.color;
+                    ganttBlock.style.position = 'absolute';
+                    ganttBlock.style.left = `${left}px`;
+                    ganttBlock.style.top = '0';
                     
                     // For MLFQ, show queue level
                     let queueInfo = '';
-                    if (this.currentAlgorithm === 'mlfq' && block.queueLevel !== undefined) {
-                        queueInfo = ` (Q${block.queueLevel})`;
+                    if (this.currentAlgorithm === 'mlfq' && block.queueLevel !== undefined && block.processId !== "Idle") {
+                        queueInfo = `<div class="gantt-block-queue">Q${block.queueLevel}</div>`;
                     }
                     
                     ganttBlock.innerHTML = `
-                        <div>${block.processId}${queueInfo}</div>
-                        <div class="text-xs">${block.startTime}-${block.endTime}</div>
+                        <div class="gantt-block-content">
+                            <div class="gantt-block-pid">${block.processId}</div>
+                            <div class="gantt-block-time">${block.startTime}-${block.endTime}</div>
+                            ${queueInfo}
+                        </div>
                     `;
                     
                     ganttChartDiv.appendChild(ganttBlock);
+                    
+                    // Track process colors for legend
+                    if (block.processId !== "Idle") {
+                        processColors.set(block.processId, block.color);
+                    }
                 });
                 
-                // Add time markers
-                const timeMarkerContainer = document.createElement('div');
-                timeMarkerContainer.className = 'flex justify-between w-full mt-1 text-xs text-gray-400';
-                ganttChartDiv.appendChild(timeMarkerContainer);
+                // Add legend for processes
+                if (processColors.size > 0) {
+                    // Add Idle to legend first
+                    const idleLegend = document.createElement('div');
+                    idleLegend.className = 'legend-item';
+                    idleLegend.innerHTML = `
+                        <div class="legend-color" style="background-color: #555555;"></div>
+                        <div>Idle</div>
+                    `;
+                    legendDiv.appendChild(idleLegend);
+                    
+                    // Sort processes by ID for consistent legend order
+                    const sortedProcesses = Array.from(processColors.keys()).sort((a, b) => {
+                        if (a === "Idle") return -1;
+                        if (b === "Idle") return 1;
+                        return a.localeCompare(b);
+                    });
+                    
+                    sortedProcesses.forEach(processId => {
+                        if (processId === "Idle") return; // Already added
+                        
+                        const color = processColors.get(processId);
+                        const legendItem = document.createElement('div');
+                        legendItem.className = 'legend-item';
+                        legendItem.innerHTML = `
+                            <div class="legend-color" style="background-color: ${color};"></div>
+                            <div>${processId}</div>
+                        `;
+                        legendDiv.appendChild(legendItem);
+                    });
+                }
             }
             
             updateResultsTable(processes) {
@@ -1246,18 +1716,83 @@
                 document.getElementById('avgResponseTime').textContent = avgResponseTime.toFixed(2);
             }
         }
-        
+
         // Initialize the scheduler
         const scheduler = new Scheduler();
-        
+
         // Add sample processes
         scheduler.addProcess(new Process('P1', 0, 5));
         scheduler.addProcess(new Process('P2', 1, 3));
         scheduler.addProcess(new Process('P3', 2, 8));
         scheduler.addProcess(new Process('P4', 3, 2));
         scheduler.addProcess(new Process('P5', 4, 9));
-        
+
         // Event listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('addProcess').addEventListener('click', () => {
+                const id = scheduler.getNextProcessId();
+                const arrivalTime = document.getElementById('arrivalTime').value;
+                const burstTime = document.getElementById('burstTime').value;
+                
+                if (!arrivalTime || !burstTime) {
+                    alert('Please fill in all fields!');
+                    return;
+                }
+                
+                scheduler.addProcess(new Process(id, arrivalTime, burstTime));
+                
+                // Clear input fields except for process ID which is auto-generated
+                document.getElementById('arrivalTime').value = '0';
+                document.getElementById('burstTime').value = '5';
+            });
+            
+            document.getElementById('clearProcesses').addEventListener('click', () => {
+                scheduler.clearProcesses();
+            });
+            
+            document.getElementById('runSimulation').addEventListener('click', () => {
+                // Update time quantum settings before running
+                if (scheduler.currentAlgorithm === 'rr') {
+                    scheduler.setTimeQuantum(document.getElementById('timeQuantum').value);
+                } else if (scheduler.currentAlgorithm === 'mlfq') {
+                    scheduler.setMLFQQuantums(
+                        document.getElementById('mlfq-q0').value,
+                        document.getElementById('mlfq-q1').value,
+                        document.getElementById('mlfq-q2').value,
+                        document.getElementById('mlfq-q3').value
+                    );
+                }
+                
+                scheduler.runSimulation();
+            });
+            
+            document.getElementById('generateRandom').addEventListener('click', () => {
+                const count = parseInt(document.getElementById('randomCount').value);
+                if (isNaN(count) || count <= 0 || count > 20) {
+                    alert('Please enter a valid number between 1 and 20!');
+                    return;
+                }
+                scheduler.generateRandomProcesses(count);
+            });
+            
+            document.getElementById('refreshPid').addEventListener('click', () => {
+                scheduler.updateNextProcessIdInput();
+            });
+            
+            // Initialize the process ID field
+            scheduler.updateNextProcessIdInput();
+            
+            // Algorithm selection dropdown
+            document.getElementById('algorithmSelect').addEventListener('change', (e) => {
+                const algorithm = e.target.value;
+                scheduler.setAlgorithm(algorithm);
+            });
+            
+            // Initialize algorithm settings visibility
+            scheduler.showAlgorithmSettings();
+        });
+
+        // Initialize immediately since we're using inline script
         document.getElementById('addProcess').addEventListener('click', () => {
             const id = scheduler.getNextProcessId();
             const arrivalTime = document.getElementById('arrivalTime').value;
@@ -1274,11 +1809,11 @@
             document.getElementById('arrivalTime').value = '0';
             document.getElementById('burstTime').value = '5';
         });
-        
+
         document.getElementById('clearProcesses').addEventListener('click', () => {
             scheduler.clearProcesses();
         });
-        
+
         document.getElementById('runSimulation').addEventListener('click', () => {
             // Update time quantum settings before running
             if (scheduler.currentAlgorithm === 'rr') {
@@ -1294,7 +1829,7 @@
             
             scheduler.runSimulation();
         });
-        
+
         document.getElementById('generateRandom').addEventListener('click', () => {
             const count = parseInt(document.getElementById('randomCount').value);
             if (isNaN(count) || count <= 0 || count > 20) {
@@ -1303,33 +1838,25 @@
             }
             scheduler.generateRandomProcesses(count);
         });
-        
+
         document.getElementById('refreshPid').addEventListener('click', () => {
             scheduler.updateNextProcessIdInput();
         });
-        
+
         // Initialize the process ID field
         scheduler.updateNextProcessIdInput();
-        
-        // Algorithm tab selection
-        document.querySelectorAll('.nvidia-tab').forEach(tab => {
-            tab.addEventListener('click', (e) => {
-                // Remove active class from all tabs
-                document.querySelectorAll('.nvidia-tab').forEach(t => {
-                    t.classList.remove('active');
-                });
-                
-                // Add active class to clicked tab
-                e.target.classList.add('active');
-                
-                // Set the algorithm
-                const algorithm = e.target.getAttribute('data-algorithm');
-                scheduler.setAlgorithm(algorithm);
-            });
+
+        // Algorithm selection dropdown
+        document.getElementById('algorithmSelect').addEventListener('change', (e) => {
+            const algorithm = e.target.value;
+            scheduler.setAlgorithm(algorithm);
         });
-        
+
         // Initialize algorithm settings visibility
         scheduler.showAlgorithmSettings();
+
+        // Update the process table with initial processes
+        scheduler.updateProcessTable();
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9648809fc7e2a9a6',t:'MTc1MzQxMzQyNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9671893bf6a13d96',t:'MTc1Mzg0MzY5Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
