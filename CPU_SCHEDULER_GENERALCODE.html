@@ -256,40 +256,40 @@
         }
 
         .gantt-chart {
-            height: 80px; /* Increased height for better visibility */
+            height: 60px; /* Reduced height */
             min-width: 100%;
             white-space: nowrap;
             position: relative;
-            padding-top: 10px; /* Add padding at the top */
+            padding-top: 10px;
         }
 
         .gantt-block {
             display: inline-block;
-            height: 60px; /* Fixed height for blocks */
+            height: 40px; /* Reduced height for blocks */
             text-align: center;
             color: white;
             font-weight: bold;
-            line-height: 30px;
+            line-height: 20px; /* Reduced line height */
             border-radius: 4px;
-            margin: 0 3px; /* Increased margin between blocks */
+            margin: 0 3px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
             overflow: hidden;
             position: relative;
-            border: 1px solid rgba(255, 255, 255, 0.2); /* Add border for better visibility */
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .time-marker {
             position: absolute;
             bottom: -20px;
             transform: translateX(-50%);
-            font-size: 12px; /* Increased font size */
-            color: #ddd; /* Brighter color for better visibility */
+            font-size: 12px;
+            color: #ddd;
             font-weight: bold;
         }
 
         .time-marker-line {
             position: absolute;
-            height: 80px; /* Match the gantt chart height */
+            height: 60px; /* Match the gantt chart height */
             width: 1px;
             background-color: rgba(255, 255, 255, 0.2);
             bottom: 20px;
@@ -457,13 +457,15 @@
             font-weight: bold;
         }
         
+        /* Improved gantt block content layout */
         .gantt-block-content {
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
             justify-content: center;
             align-items: center;
             height: 100%;
-            padding: 4px;
+            padding: 2px;
+            gap: 4px;
         }
         
         .gantt-block-pid {
@@ -479,7 +481,9 @@
         .gantt-block-queue {
             font-size: 10px;
             opacity: 0.8;
-            margin-top: 2px;
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 0 3px;
+            border-radius: 2px;
         }
         
         .gantt-legend {
@@ -1613,13 +1617,14 @@
                     // For MLFQ, show queue level
                     let queueInfo = '';
                     if (this.currentAlgorithm === 'mlfq' && block.queueLevel !== undefined && block.processId !== "Idle") {
-                        queueInfo = `<div class="gantt-block-queue">Q${block.queueLevel}</div>`;
+                        queueInfo = `<span class="gantt-block-queue">Q${block.queueLevel}</span>`;
                     }
                     
+                    // Improved layout with horizontal arrangement
                     ganttBlock.innerHTML = `
                         <div class="gantt-block-content">
-                            <div class="gantt-block-pid">${block.processId}</div>
-                            <div class="gantt-block-time">${block.startTime}-${block.endTime}</div>
+                            <span class="gantt-block-pid">${block.processId}</span>
+                            <span class="gantt-block-time">${block.startTime}-${block.endTime}</span>
                             ${queueInfo}
                         </div>
                     `;
@@ -1727,72 +1732,33 @@
         scheduler.addProcess(new Process('P4', 3, 2));
         scheduler.addProcess(new Process('P5', 4, 9));
 
-        // Event listeners
+        // Set up event listeners
         document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('addProcess').addEventListener('click', () => {
-                const id = scheduler.getNextProcessId();
-                const arrivalTime = document.getElementById('arrivalTime').value;
-                const burstTime = document.getElementById('burstTime').value;
-                
-                if (!arrivalTime || !burstTime) {
-                    alert('Please fill in all fields!');
-                    return;
-                }
-                
-                scheduler.addProcess(new Process(id, arrivalTime, burstTime));
-                
-                // Clear input fields except for process ID which is auto-generated
-                document.getElementById('arrivalTime').value = '0';
-                document.getElementById('burstTime').value = '5';
-            });
-            
-            document.getElementById('clearProcesses').addEventListener('click', () => {
-                scheduler.clearProcesses();
-            });
-            
-            document.getElementById('runSimulation').addEventListener('click', () => {
-                // Update time quantum settings before running
-                if (scheduler.currentAlgorithm === 'rr') {
-                    scheduler.setTimeQuantum(document.getElementById('timeQuantum').value);
-                } else if (scheduler.currentAlgorithm === 'mlfq') {
-                    scheduler.setMLFQQuantums(
-                        document.getElementById('mlfq-q0').value,
-                        document.getElementById('mlfq-q1').value,
-                        document.getElementById('mlfq-q2').value,
-                        document.getElementById('mlfq-q3').value
-                    );
-                }
-                
-                scheduler.runSimulation();
-            });
-            
-            document.getElementById('generateRandom').addEventListener('click', () => {
-                const count = parseInt(document.getElementById('randomCount').value);
-                if (isNaN(count) || count <= 0 || count > 20) {
-                    alert('Please enter a valid number between 1 and 20!');
-                    return;
-                }
-                scheduler.generateRandomProcesses(count);
-            });
-            
-            document.getElementById('refreshPid').addEventListener('click', () => {
-                scheduler.updateNextProcessIdInput();
-            });
-            
             // Initialize the process ID field
             scheduler.updateNextProcessIdInput();
-            
-            // Algorithm selection dropdown
-            document.getElementById('algorithmSelect').addEventListener('change', (e) => {
-                const algorithm = e.target.value;
-                scheduler.setAlgorithm(algorithm);
-            });
             
             // Initialize algorithm settings visibility
             scheduler.showAlgorithmSettings();
         });
 
-        // Initialize immediately since we're using inline script
+        // Fix the duplication issue by removing the duplicate event listeners
+        // and only adding them once
+        const addProcessBtn = document.getElementById('addProcess');
+        const clearProcessesBtn = document.getElementById('clearProcesses');
+        const runSimulationBtn = document.getElementById('runSimulation');
+        const generateRandomBtn = document.getElementById('generateRandom');
+        const refreshPidBtn = document.getElementById('refreshPid');
+        const algorithmSelect = document.getElementById('algorithmSelect');
+
+        // Remove any existing event listeners (if any)
+        addProcessBtn.replaceWith(addProcessBtn.cloneNode(true));
+        clearProcessesBtn.replaceWith(clearProcessesBtn.cloneNode(true));
+        runSimulationBtn.replaceWith(runSimulationBtn.cloneNode(true));
+        generateRandomBtn.replaceWith(generateRandomBtn.cloneNode(true));
+        refreshPidBtn.replaceWith(refreshPidBtn.cloneNode(true));
+        algorithmSelect.replaceWith(algorithmSelect.cloneNode(true));
+
+        // Re-get the elements after replacing them
         document.getElementById('addProcess').addEventListener('click', () => {
             const id = scheduler.getNextProcessId();
             const arrivalTime = document.getElementById('arrivalTime').value;
@@ -1843,20 +1809,15 @@
             scheduler.updateNextProcessIdInput();
         });
 
-        // Initialize the process ID field
-        scheduler.updateNextProcessIdInput();
-
         // Algorithm selection dropdown
         document.getElementById('algorithmSelect').addEventListener('change', (e) => {
             const algorithm = e.target.value;
             scheduler.setAlgorithm(algorithm);
         });
 
-        // Initialize algorithm settings visibility
+        // Initialize the process ID field and algorithm settings
+        scheduler.updateNextProcessIdInput();
         scheduler.showAlgorithmSettings();
-
-        // Update the process table with initial processes
-        scheduler.updateProcessTable();
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9671893bf6a13d96',t:'MTc1Mzg0MzY5Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96725dc8245ae39e',t:'MTc1Mzg1MjQwMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
